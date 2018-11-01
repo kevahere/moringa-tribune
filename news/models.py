@@ -7,6 +7,7 @@ class Editor(models.Model):
     email = models.EmailField()
     phone_number =models.CharField(max_length=10,blank=True)
 
+
     def __str__(self):
         return self.first_name
     class Meta:
@@ -30,7 +31,9 @@ class Article(models.Model):
     post = models.TextField()
     editor = models.ForeignKey(Editor)
     tags = models.ManyToManyField(tags)
+    article_image = models.ImageField(upload_to='articles/',blank= True)
     pub_date = models.DateTimeField(auto_now_add=True)
+
 
     @classmethod
     def todays_news(cls):
@@ -41,4 +44,9 @@ class Article(models.Model):
     @classmethod
     def days_news(cls,date):
         news = cls.objects.filter(pub_date__date = date)
+        return news
+
+    @classmethod
+    def search_by_title(cls,search_term):
+        news = cls.objects.filter(title__icontains=search_term)
         return news
