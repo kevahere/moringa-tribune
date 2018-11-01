@@ -14,6 +14,7 @@ def news_today(request):
     #function to convert date object to find exact day
     return render (request,'all-news/today-news.html', {"date": date,"news":news})
 
+
 #converting views
 def convert_dates(dates):
     #Function that gets the weekday number for the date
@@ -23,6 +24,7 @@ def convert_dates(dates):
     #Returning the actual day of the week
     day = days[day_number]
     return day
+
 #news archives view
 def past_days_news(request,past_date):
     try:
@@ -35,6 +37,7 @@ def past_days_news(request,past_date):
 
     if date == dt.date.today():
         return redirect(news_of_day)
+    news = Article.days_news(date)
     return render(request,'all-news/past-news.html', {"date":date,"news":news})
 
 #view for search results
@@ -48,3 +51,11 @@ def search_results(request):
     else:
         message = "You haven't searched for any term"
         return render(request, 'all-news/search.html',{"message":message})
+
+#view to add a single article
+def article(request,article_id):
+    try:
+        article = Article.objects.get(id = article_id)
+    except DoesNotExist:
+        raise Http404()
+    return render(request,"all-news/article.html",{"article":article})
